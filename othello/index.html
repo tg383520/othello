@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오델로</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>오델로</h1>
+
+    <!-- =================================================== -->
+    <!--               SECTION 1: 선택 화면                  -->
+    <!-- =================================================== -->
+
+    <!-- 게임 모드 선택 -->
+    <div id="game-mode-selection">
+        <h2>게임 모드 선택</h2>
+        <button id="pvp-button">사람과 대전</button>
+        <button id="pve-button">AI와 대전</button>
+    </div>
+
+    <!-- AI 난이도 선택 -->
+    <div id="difficulty-selection" style="display: none;">
+        <h2>AI 난이도 선택</h2>
+        <button class="difficulty-btn" data-difficulty="easy">쉬움</button>
+        <button class="difficulty-btn" data-difficulty="normal">보통</button>
+        <button class="difficulty-btn" data-difficulty="hard">어려움</button>
+    </div>
+
+    <!-- =================================================== -->
+    <!--                SECTION 2: 메인 게임 영역              -->
+    <!-- =================================================== -->
+
+    <div class="main-content" style="display: none;">
+        
+        <!-- 왼쪽: 게임 보드 및 정보 -->
+        <div class="game-container">
+            <!-- 점수 및 턴 정보 -->
+            <div class="game-info">
+                <div id="black-player-info" class="player-info">
+                    <span class="player-name">흑돌</span>
+                    <span id="black-score" class="score">2</span>
+                </div>
+                <div id="turn-indicator">흑돌의 차례</div>
+                <div id="white-player-info" class="player-info">
+                    <span class="player-name">백돌</span>
+                    <span id="white-score" class="score">2</span>
+                </div>
+            </div>
+
+            <!-- 게임 보드와 좌표계 -->
+            <div class="board-area">
+                <div class="board-labels-top"><div>A</div><div>B</div><div>C</div><div>D</div><div>E</div><div>F</div><div>G</div><div>H</div></div>
+                <div class="board-labels-left"><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div></div>
+                <div id="board"></div>
+            </div>
+
+            <!-- 게임 컨트롤 버튼 -->
+            <div class="button-group">
+                <button id="resign-button">기권하기</button>
+                <button id="back-to-selection-button">모드 선택</button>
+            </div>
+        </div>
+        
+        <!-- 오른쪽: 사이드바 -->
+        <div class="sidebar-container">
+
+            <!-- 게임 종료 모달 -->
+            <div id="game-over-modal" style="display: none;">
+                <div class="modal-content-sidebar">
+                    <h2 id="game-over-title">게임 종료</h2>
+                    <p id="game-over-message">흑의 승리!</p>
+                    <div class="final-score-container">
+                        <div class="final-score">
+                            <span class="disc black"></span>
+                            <span id="final-black-score">34</span>
+                        </div>
+                        <div class="final-score">
+                            <span class="disc white"></span>
+                            <span id="final-white-score">30</span>
+                        </div>
+                    </div>
+                    <div class="button-group-column">
+                        <button id="restart-button-modal">새 게임 시작</button>
+                        <button id="review-button-modal">게임 복기 보기</button>
+                        <button id="main-menu-button-modal">메인 화면으로</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="win-rate-container" style="display: none;">
+                <h3>실시간 승률</h3>
+                <div class="win-rate-graph">
+                    <div class="bar-label"><span>흑</span><span id="black-win-rate-text">50%</span></div>
+                    <div class="win-rate-bar-container"><div class="bar black-bar" id="black-win-rate-bar"></div></div>
+                    <div class="win-rate-bar-container"><div class="bar white-bar" id="white-win-rate-bar"></div></div>
+                    <div class="bar-label"><span>백</span><span id="white-win-rate-text">50%</span></div>
+                </div>
+            </div>
+            <div id="ai-commentary-container" style="display: none;">
+                <h3>AI의 해설</h3>
+                <p id="ai-commentary-text"></p>
+            </div>
+        </div>
+
+    <!-- =================================================== -->
+    <!--             SECTION 3: 기타 UI 요소                 -->
+    <!-- =================================================== -->
+
+    <!-- 설정 버튼 -->
+    <div id="settings-button">⚙️</div>
+
+    <!-- 설정 모달 -->
+    <div id="settings-modal" style="display: none;">
+        <div class="modal-content">
+            <span id="close-settings-button">&times;</span>
+            <h2>설정</h2>
+            <div class="setting-item">
+                <label for="toggle-win-rate">실시간 승률 표시</label>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-win-rate" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <label for="toggle-ai-commentary">AI 해설 표시</label>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-ai-commentary" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <label for="toggle-hints">놓을 수 있는 위치 표시</label>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-hints" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- 게임 종료 후 복기 그래프 모달 -->
+    <div id="graph-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span id="close-modal-button">&times;</span>
+            <h2>게임 복기 그래프</h2>
+            <canvas id="win-rate-chart"></canvas>
+        </div>
+    </div>
+
+    <!-- 기권 확인 모달 -->
+    <div id="resign-confirm-modal" class="modal" style="display: none;">
+        <div class="modal-content small-modal">
+            <h2 id="resign-confirm-title">기권 확인</h2>
+            <p id="resign-confirm-message">정말로 기권하시겠습니까?</p>
+            <div class="modal-button-group">
+                <button id="resign-confirm-yes">예</button>
+                <button id="resign-confirm-no">아니오</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 알림 메시지 버블 컨테이너 -->
+    <div id="message-container"></div>
+
+    <!-- =================================================== -->
+    <!--              SECTION 4: 스크립트 로드                 -->
+    <!-- =================================================== -->
+
+    <!-- Chart.js 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 메인 게임 스크립트 -->
+    <script src="script.js"></script>
+
+</body>
+</html>

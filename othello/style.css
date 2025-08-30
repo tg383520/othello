@@ -1,0 +1,575 @@
+/**
+ * =====================================================================
+ * Othello Game - Stylesheet
+ * =====================================================================
+ */
+
+/* --- [SECTION 1] 기본 및 공통 스타일 --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f7f7f7;
+    margin-top: 20px;
+    color: #333;
+}
+
+h1 {
+    color: #111;
+}
+
+/* --- [SECTION 2] 화면 선택 (모드, 난이도) --- */
+#game-mode-selection, #difficulty-selection {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+#game-mode-selection h2, #difficulty-selection h2 {
+    margin-bottom: 20px;
+}
+
+#game-mode-selection button, #difficulty-selection button {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    margin: 0 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+#game-mode-selection button:hover, #difficulty-selection button:hover {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* --- [SECTION 3] 메인 게임 영역 --- */
+.main-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 360px;
+    margin-bottom: 15px;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.player-info.active {
+    background-color: #e7f3ff;
+    border-color: #007bff;
+}
+
+.player-info .player-name {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.player-info .score {
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+#turn-indicator {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#turn-indicator.turn-black {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+
+#turn-indicator.turn-white {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+}
+
+/* --- [SECTION 4] 게임 보드 및 좌표계 --- */
+.board-area {
+    position: relative;
+    padding: 25px; /* 좌표 공간 확보 */
+}
+
+.board-labels-top, .board-labels-left {
+    position: absolute;
+    display: flex;
+    color: #555;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.board-labels-top {
+    top: 0;
+    left: 25px;
+    width: 320px;
+    justify-content: space-around;
+}
+
+.board-labels-left {
+    top: 25px;
+    left: 0;
+    height: 320px;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 40px);
+    grid-template-rows: repeat(8, 40px);
+    border: 2px solid #333;
+    background-color: #008000;
+}
+
+.cell {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #444;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.disc {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.valid-move-hint {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.6;
+}
+
+.valid-move-hint.black { background-color: black; }
+.valid-move-hint.white { background-color: white; border: 1px solid #555; box-sizing: border-box; }
+
+.valid-move-hint:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.black { background-color: black; }
+.white { background-color: white; }
+
+.button-group {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 360px;
+}
+
+#resign-button, #back-to-selection-button {
+    width: 100%;
+    padding: 12px 0;
+    font-size: 1.1em;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+#resign-button {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+#resign-button:hover {
+    background-color: #f1b0b7;
+}
+
+#back-to-selection-button {
+    background-color: #e9ecef;
+}
+
+#back-to-selection-button:hover {
+    background-color: #d3d9df;
+}
+
+/* --- [SECTION 5] 사이드바 --- */
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 250px;
+}
+
+#win-rate-container, #ai-commentary-container {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-sizing: border-box;
+}
+
+#win-rate-container h3, #ai-commentary-container h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.win-rate-graph {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bar-label {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.9em;
+}
+
+.win-rate-bar-container {
+    width: 100%;
+    height: 22px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    transition: width 0.4s ease-in-out;
+}
+
+.black-bar { background-color: black; }
+.white-bar { background-color: white; border: 1px solid #eee; box-sizing: border-box; }
+
+#ai-commentary-text {
+    font-size: 0.95em;
+    color: #495057;
+    min-height: 60px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    text-align: left;
+}
+
+/* --- [SECTION 6] 설정 및 모달 --- */
+#settings-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    background-color: white;
+    padding: 8px;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 1000;
+}
+
+#settings-modal {
+    position: fixed;
+    z-index: 1002;
+    right: 20px;
+    top: 80px;
+    width: 300px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    padding: 10px 20px;
+    display: none;
+}
+
+#settings-modal .modal-content {
+    width: 100%;
+}
+
+#close-settings-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #aaa;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-item label {
+    font-size: 1.1em;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round { border-radius: 34px; }
+.slider.round:before { border-radius: 50%; }
+
+/* --- [SECTION 7] 메시지 및 모달 공통 --- */
+#message-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+}
+
+.bubble {
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transition: opacity 0.5s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.bubble.show { opacity: 1; }
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 700px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.modal-content.small-modal {
+    max-width: 400px;
+    padding: 30px;
+    text-align: center;
+}
+
+#close-modal-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.modal-button-group button {
+    padding: 10px 30px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#resign-confirm-yes {
+    background-color: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+#resign-confirm-no {
+    background-color: #fdfdfd;
+}
+
+/* --- [SECTION 8] 게임 관련 모달 --- */
+#win-rate-chart {
+    width: 100% !important;
+    height: auto !important;
+}
+
+#game-over-modal {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    box-sizing: border-box;
+    border: 1px solid #e0e0e0;
+    display: none;
+}
+
+.modal-content-sidebar h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#game-over-message {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.final-score-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 25px;
+}
+
+.final-score {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.final-score .disc {
+    width: 24px;
+    height: 24px;
+}
+
+.final-score span:last-child {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.button-group-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.button-group-column button {
+    width: 100%;
+    padding: 12px 0;
+    font-size: 1em;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #fdfdfd;
+    border-radius: 5px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.button-group-column button:hover {
+    background-color: #e9ecef;
+}
+
+.button-group-column button#restart-button-modal {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.button-group-column button#restart-button-modal:hover {
+    background-color: #0056b3;
+}
